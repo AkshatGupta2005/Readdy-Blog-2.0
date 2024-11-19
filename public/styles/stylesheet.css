@@ -1,0 +1,201 @@
+@font-face {
+  font-family: brenttleySignature;
+  src: url("../fonts/BrettleySignatureRegular-RpEMo.ttf");
+}
+@font-face {
+  font-family: brotherSignature;
+  src: url("../fonts/BrotherSignature-7BWnK.otf");
+}
+.dosis {
+  font-family: "Dosis", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: normal;
+}
+.creamColor {
+  color: #faf7f0;
+}
+.green{
+    color: #6d9886;
+}
+.noUnderline{
+    text-decoration: none;
+}
+* {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+body {
+  background-color: #f6f6f6;
+}
+.navbarContainter {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.navbar {
+  width: 85%;
+  height: 3.5em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #212121;
+  padding: 0 1em 0 1em;
+  border-radius: 0 0 15px 15px;
+}
+.logoBox {
+  flex: 1;
+  display: flex;
+  justify-content: flex-start;
+}
+.logoTitle {
+  font-size: 2.2em;
+  color: #d9cab3;
+  font-family: "brotherSignature", cursive;
+  font-stretch: expanded;
+}
+.navBarOption {
+  display: flex;
+  justify-content: flex-end;
+  flex: 1;
+}
+.searchBox {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+.searchBar {
+  height: 2.6em;
+  width: 15em;
+  background-color: #f6f6f6;
+  border-radius: 25px 0 0 25px;
+  padding-left: 0.8em;
+  font-size: 0.8em;
+  color: #4a4947;
+}
+.submitBtn {
+  background: url(../icons/search_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.svg)
+    no-repeat center;
+  height: 100%;
+  width: 2.5em;
+  background-color: #6d9886;
+  border-radius: 0 50% 50% 0;
+}
+.loginBtn {
+  background-color: #6d9886;
+  height: 2.6em;
+  width: 6em;
+  text-align: center;
+  border-radius: 30px;
+  color: #f6f6f6;
+}
+.loginContainer {
+  height: 95vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.loginDiv {
+  height: 80%;
+  min-width: 25em;
+  background-color: #212121;
+  border-radius: 0.8em;
+}
+.loginCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  height: 100%;
+  width: 100%;
+}
+.loginForm {
+  margin-top: 1em;
+  display: flex;
+  width: 70%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+}
+.loginElement {
+  height: 3em;
+  width: 100%;
+  border-radius: 8px;
+  padding: 0 0.6em 0 0.6em;
+  font-size: 1em;
+  font-weight: 600;
+  box-sizing: border-box;
+}
+.loginLogo {
+  font-size: 3.5em;
+  margin: 0;
+}
+.loginText {
+  text-align: center;
+}
+.loginCard > * {
+}
+.loginText {
+  font-size: 2em;
+}
+.passwordFeild {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.passBox {
+  width: 100%;
+}
+.loginSbm{
+    width: 50%;
+    padding: 0;
+    font-size: 1.1em;
+    color:#f6f6f6;
+    background-color: #6d9886;
+    margin-top: 1.6em;
+}
+#toggler {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+footer{
+    margin-top: 2em;
+}
+footer div{
+    text-align: center;
+    font-family: "Dosis", sans-serif;
+}
+@media screen and (max-width: 420px) and (min-width:360px){
+    .loginDiv{
+        min-width: 22em;
+        height: 80%;
+    }
+  }
+@media screen and (max-width: 360px) {
+    .loginDiv{
+        min-width: 18em;
+        height: 90%;
+    }
+  }
+@media screen and (max-height: 749px) and (min-width:640px){
+    .loginDiv{
+        height: 90%;
+    }
+  }
+@media screen and (max-height: 639px){
+    .loginContainer{
+        height: 100vh;
+    }
+    .loginDiv{
+        margin-top: 1em;
+        height: 98%;
+    }
+  }
