@@ -11,9 +11,15 @@
         </form>
     </div>
     <div class="navBarOption">
-        <form action="/login">
-            <input type="submit" class="loginBtn" value="Login">
-        </form>
+        <% if (locals.userid) { %>
+            <form action="/profile">
+                <input type="submit" class="loginBtn" value="Profile">
+            </form>
+        <% } else { %>
+            <form action="/login">
+                <input type="submit" class="loginBtn" value="Login">
+            </form>
+        <% } %> 
     </div>
 </div>
 </div>
