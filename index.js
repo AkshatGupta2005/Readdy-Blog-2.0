@@ -34,9 +34,7 @@ db.query("SELECT * FROM users", (err, res) => {
 });
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const client = new Redis({
-  password: "secret",
-});
+const client = new Redis(process.env.REDIS_URL);
 const store = new RedisStore({ client });
 
 app.use(
