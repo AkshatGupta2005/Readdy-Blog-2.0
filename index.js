@@ -84,9 +84,21 @@ const updateNavbar = (req, res, next) => {
     next();
   }
 };
+const getUserName = async (id) => {
+  const result = await db.query("SELECT name FROM users WHERE id = $1", [id]);
+  return result.rows[0].name;
+}
+const getUserDetails = async (id) => {
+  var allBlogs = await db.query("SELECT post FROM blogpost WHERE uid = $1", [id]);
+  var pubBlogs = await db.query("SELECT post FROM blogpost WHERE uid = $1 AND private = 'FALSE'", [id]);
+  var priBlogs = await db.query("SELECT post FROM blogpost WHERE uid = $1 AND private = 'TRUE'", [id]);
+  allBlogs = allBlogs.rows.length;
+  priBlogs = priBlogs.rows.length;
+  pubBlogs = pubBlogs.rows.length;
+  return [allBlogs, priBlogs, pubBlogs];
+}
 app.get("/", (req, res) => {
-  //console.log(req.session);
-  //console.log(req.session.userid);
+  console.log(req.session.userid);
   updateNavbar;
   res.render("index.ejs", { userid: req.session.userid });
 });
@@ -137,8 +149,10 @@ app.post("/logUser", async (req, res) => {
   }
 });
 
-app.get("/profile", redirectLogin, (req, res) => {
-  res.render("profile.ejs", { userid: req.session.userid });
+app.get("/profile", redirectLogin, async (req, res) => {
+  const userName = await getUserName(req.session.userid);
+  const [all, pub , pri] = await getUserDetails(req.session.userid);
+  res.render("profile.ejs", { userName : userName, allBlog: all, publicBlog: pub, privateBlog: pri });
 });
 
 app.listen(port, () => {

@@ -15,11 +15,11 @@
 .creamColor {
   color: #faf7f0;
 }
-.green{
-    color: #6d9886;
+.green {
+  color: #6d9886;
 }
-.noUnderline{
-    text-decoration: none;
+.noUnderline {
+  text-decoration: none;
 }
 * {
   margin: 0;
@@ -49,6 +49,7 @@ body {
   flex: 1;
   display: flex;
   justify-content: flex-start;
+  flex-wrap: nowrap;
 }
 .logoTitle {
   font-size: 2.2em;
@@ -65,10 +66,12 @@ body {
   flex: 1;
   display: flex;
   justify-content: center;
+  flex-wrap: nowrap;
 }
 .searchBar {
   height: 2.6em;
-  width: 15em;
+  max-width: 15em;
+  min-width: 10em;
   background-color: #f6f6f6;
   border-radius: 25px 0 0 25px;
   padding-left: 0.8em;
@@ -151,17 +154,22 @@ body {
 .passBox {
   width: 100%;
 }
-.loginSbm{
-    width: 50%;
-    padding: 0;
-    font-size: 1.1em;
-    color:#f6f6f6;
-    background-color: #6d9886;
-    margin-top: 1.1em;
+.loginSbm {
+  width: 50%;
+  padding: 0;
+  font-size: 1.1em;
+  color: #f6f6f6;
+  background-color: #6d9886;
+  margin-top: 1.1em;
 }
-.errorBox{
+.errorBox {
   height: 0.8em;
-  color: #C62E2E;
+  color: #c62e2e;
+}
+.searchForm {
+  display: flex;
+  gap: 5px;
+  flex-wrap: nowrap;
 }
 #toggler {
   position: absolute;
@@ -170,47 +178,90 @@ body {
   transform: translateY(-50%);
   cursor: pointer;
 }
-footer{
-    margin-top: 2em;
+footer {
+  margin-top: 2em;
 }
-footer div{
-    text-align: center;
-    font-family: "Dosis", sans-serif;
+footer div {
+  text-align: center;
+  font-family: "Dosis", sans-serif;
 }
-@media screen and (max-width: 420px) and (min-width:360px){
-    .loginDiv{
-        min-width: 22em;
-        height: 90%;
-
-      }
-      .loginContainer{
-        height: 98vh;
-    }
+.profile {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2em;
+}
+.profileCard {
+  width: 80%;
+  border-radius: 30px;
+  border: 2px solid #4a4947;
+  padding: 1em;
+  text-align: center;
+}
+.profileDetails {
+  display: flex;
+  justify-content: space-evenly;
+  font-size: 1.3em;
+}
+.profileDetailsDiv {
+  margin-bottom: 1em;
+}
+.titleBlog {
+  font-size: 1.5em;
+  margin-bottom: 0.6em;
+}
+.profileDiv {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  height: 100%;
+}
+.profileOptions {
+  display: flex;
+  justify-content: space-evenly;
+}
+.profileName {
+  font-family: brenttleySignature;
+  font-size: 2.3em;
+  margin-bottom: 0.6em;
+}
+.optionBtn {
+  font-size: 1.3em;
+  padding: 0.4em 1em;
+  border-radius: 25px;
+  color: #f6f6f6;
+}
+.updateProfileBtn {
+  background-color: #6d9886;
+}
+.logoutBtn {
+  background-color: #c62e2e;
+}
+@media screen and (max-width: 700px) and (min-width: 360px) {
+  .logoTitle {
+    font-size: 1.8em;
   }
+}
+@media screen and (max-width: 420px) and (min-width: 360px) {
+  .loginDiv {
+    min-width: 22em;
+    height: 90%;
+  }
+  .loginContainer {
+    height: 98vh;
+  }
+}
 @media screen and (max-width: 360px) {
-    .loginDiv{
-        min-width: 18em;
-        height: 95%;
-    }
-    .loginContainer{
-      height: 99vh;
+  .loginDiv {
+    min-width: 18em;
+    height: 95%;
   }
-  .loginElement{
+  .loginContainer {
+    height: 99vh;
+  }
+  .loginElement {
     height: 2.5em;
     font-size: 0.8em;
   }
-  }
-@media screen and (max-height: 749px) and (min-width:640px){
-    .loginDiv{
-        height: 90%;
-    }
-    .loginContainer{
-        height: 100vh;
-    }
-  }
-@media screen and (max-height: 639px){
-    .loginDiv{
-        margin-top: 1em;
-        height: 98%;
-    }
-  }
+}
