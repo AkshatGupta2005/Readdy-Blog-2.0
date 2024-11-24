@@ -78,7 +78,7 @@ const redirectLogin = (req, res, next) => {
 };
 const updateNavbar = (req, res, next) => {
   if (req.session.userid) {
-    res.render("navbar.ejs", { userLogin: true });
+    res.render("navbar.ejs", { userid: req.session.userid });
     next();
   } else {
     next();
@@ -98,7 +98,6 @@ const getUserDetails = async (id) => {
   return [allBlogs, priBlogs, pubBlogs];
 }
 app.get("/", (req, res) => {
-  console.log(req.session.userid);
   updateNavbar;
   res.render("index.ejs", { userid: req.session.userid });
 });
@@ -106,8 +105,7 @@ app.get("/login", redirectHome, (req, res) => {
   res.render("login.ejs");
 });
 app.get("/userLogin", redirectHome, (req, res) => {
-  updateNavbar;
-  res.redirect("/");
+  res.render("login.ejs", {userLogin : true});
 });
 app.post("/register", redirectHome, async (req, res) => {
   var { name, email, pass } = req.body;

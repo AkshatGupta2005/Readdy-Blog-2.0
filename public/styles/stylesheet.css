@@ -38,18 +38,17 @@ body {
 .navbar {
   width: 85%;
   height: 3.5em;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
   background-color: #212121;
   padding: 0 1em 0 1em;
   border-radius: 0 0 15px 15px;
 }
 .logoBox {
-  flex: 1;
   display: flex;
   justify-content: flex-start;
   flex-wrap: nowrap;
+  align-items: center;
 }
 .logoTitle {
   font-size: 2.2em;
@@ -60,18 +59,18 @@ body {
 .navBarOption {
   display: flex;
   justify-content: flex-end;
-  flex: 1;
+  align-items: center;
 }
 .searchBox {
-  flex: 1;
   display: flex;
   justify-content: center;
   flex-wrap: nowrap;
+  align-items: center;
 }
 .searchBar {
-  height: 2.6em;
-  max-width: 15em;
-  min-width: 10em;
+  height: 100%;
+  width: 80%;
+  flex: 1;
   background-color: #f6f6f6;
   border-radius: 25px 0 0 25px;
   padding-left: 0.8em;
@@ -170,6 +169,9 @@ body {
   display: flex;
   gap: 5px;
   flex-wrap: nowrap;
+  height: 60%;
+  width: 80%;
+  align-items: center;
 }
 #toggler {
   position: absolute;
@@ -238,9 +240,24 @@ footer div {
 .logoutBtn {
   background-color: #c62e2e;
 }
-@media screen and (max-width: 700px) and (min-width: 360px) {
-  .logoTitle {
-    font-size: 1.8em;
+hr{
+  border: 1px solid #E4E0E1;
+  width: 60%;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 1em;
+}
+@media screen and (max-width: 768px){
+  .searchBox{
+    order: 1;
+    grid-column-start: -3;
+    grid-column-end: -1;
+  }
+  .navbar{
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    height: fit-content;
   }
 }
 @media screen and (max-width: 420px) and (min-width: 360px) {
@@ -252,7 +269,7 @@ footer div {
     height: 98vh;
   }
 }
-@media screen and (max-width: 360px) {
+@media screen and (max-width: 375px) {
   .loginDiv {
     min-width: 18em;
     height: 95%;
@@ -263,5 +280,11 @@ footer div {
   .loginElement {
     height: 2.5em;
     font-size: 0.8em;
+  }
+  .logoTitle{
+    font-size: 1.9em;
+  } 
+  .optionBtn{
+    padding: 0.3em 0.5em;
   }
 }
