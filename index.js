@@ -7,6 +7,8 @@ import session from "express-session";
 import RedisStore from "connect-redis";
 import Redis from "ioredis";
 import * as EmailValidator from "email-validator";
+import axios from "axios";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 dotenv.config();
 const app = express();
 const port = process.env.s_port;
@@ -24,7 +26,7 @@ const db = new pg.Client({
   },
 });
 db.connect();
-
+var chatHistory = [];
 db.query("SELECT * FROM users", (err, res) => {
   if (err) {
     console.err("Error : ", err.stack);
@@ -36,7 +38,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 const client = new Redis(process.env.REDIS_URL);
 const store = new RedisStore({ client });
-
+app.use(express.json());
 app.use(
   session({
     store,
@@ -62,6 +64,13 @@ const checkEmailExist = async (email) => {
   );
   return result.rows[0].exists;
 };
+const checkPassword = async (email, password) => {
+  const result = await db.query(
+    "SELECT (password IS NOT NULL AND password = $1) AS are_equal FROM users WHERE email = $2;",
+    [password, email]
+  );
+  return result.rows[0].are_equal;
+};
 const redirectHome = (req, res, next) => {
   if (req.session.userid) {
     res.redirect("/");
@@ -76,36 +85,36 @@ const redirectLogin = (req, res, next) => {
     next();
   }
 };
-const updateNavbar = (req, res, next) => {
-  if (req.session.userid) {
-    res.render("navbar.ejs", { userid: req.session.userid });
-    next();
-  } else {
-    next();
-  }
-};
 const getUserName = async (id) => {
   const result = await db.query("SELECT name FROM users WHERE id = $1", [id]);
   return result.rows[0].name;
-}
+};
 const getUserDetails = async (id) => {
-  var allBlogs = await db.query("SELECT post FROM blogpost WHERE uid = $1", [id]);
-  var pubBlogs = await db.query("SELECT post FROM blogpost WHERE uid = $1 AND private = 'FALSE'", [id]);
-  var priBlogs = await db.query("SELECT post FROM blogpost WHERE uid = $1 AND private = 'TRUE'", [id]);
+  var allBlogs = await db.query("SELECT post FROM blogpost WHERE uid = $1", [
+    id,
+  ]);
+  var pubBlogs = await db.query(
+    "SELECT post FROM blogpost WHERE uid = $1 AND private = 'FALSE'",
+    [id]
+  );
+  var priBlogs = await db.query(
+    "SELECT post FROM blogpost WHERE uid = $1 AND private = 'TRUE'",
+    [id]
+  );
   allBlogs = allBlogs.rows.length;
   priBlogs = priBlogs.rows.length;
   pubBlogs = pubBlogs.rows.length;
   return [allBlogs, priBlogs, pubBlogs];
-}
+};
 app.get("/", (req, res) => {
-  updateNavbar;
   res.render("index.ejs", { userid: req.session.userid });
+  console.log(req.session.userid);
 });
 app.get("/login", redirectHome, (req, res) => {
   res.render("login.ejs");
 });
 app.get("/userLogin", redirectHome, (req, res) => {
-  res.render("login.ejs", {userLogin : true});
+  res.render("login.ejs", { userLogin: true });
 });
 app.post("/register", redirectHome, async (req, res) => {
   var { name, email, pass } = req.body;
@@ -119,7 +128,6 @@ app.post("/register", redirectHome, async (req, res) => {
         [name, email, pass]
       );
       req.session.userid = id.rows[0].id;
-      updateNavbar;
       res.redirect("/");
     } else {
       const err = "Email Already Exist";
@@ -135,24 +143,60 @@ app.post("/logUser", async (req, res) => {
   const checkEmail = await checkEmailExist(email);
   if (!checkEmail) {
     const err = "Email Id Does Not Exist";
-    res.render("login.ejs", { err: err });
+    res.render("login.ejs", { err: err, userLogin: true });
   } else {
-    const id = await db.query(
-      "SELECT id FROM users WHERE email = $1 AND password = $2",
-      [email, pass]
-    );
-    req.session.userid = id.rows[0].id;
-    updateNavbar;
-    res.redirect("/");
+    const check = await checkPassword(email, pass);
+    if (check) {
+      const id = await db.query(
+        "SELECT id FROM users WHERE email = $1 AND password = $2",
+        [email, pass]
+      );
+      req.session.userid = id.rows[0].id;
+      res.redirect("/");
+    } else {
+      const err = "Incorrect Password";
+      res.render("login.ejs", { err: err, userLogin: true });
+    }
   }
 });
 
 app.get("/profile", redirectLogin, async (req, res) => {
   const userName = await getUserName(req.session.userid);
-  const [all, pub , pri] = await getUserDetails(req.session.userid);
-  res.render("profile.ejs", { userName : userName, allBlog: all, publicBlog: pub, privateBlog: pri });
+  const [all, pub, pri] = await getUserDetails(req.session.userid);
+  res.render("profile.ejs", {
+    userName: userName,
+    allBlog: all,
+    publicBlog: pub,
+    privateBlog: pri,
+  });
 });
 
+app.get("/chatbot", redirectLogin, (req, res) => {
+  res.render("chatbox.ejs", { userid: req.session.userid });
+  chatHistory = [];
+  const textInstruction = "Always reply in an HTML-friendly format.";
+const SYSTEM_PROMPT = 
+  "You are a chatbot specializing in book reviews, author insights, and literary recommendations. Only answer questions related to books, authors, or literary topics. If a question is unrelated, politely say: 'Sorry, I can only assist with books, authors, and literary reviews. Please feel free to ask about those!'. If asked who made you, politely reply with: 'I am created with passion and powered by Google.' Do not suggest searching anywhere else for book or author-related reviews. Answer efficiently: 'Can you recommend a book on [genre/topic]?', 'What are some popular books by [author]?', 'What is the summary/review of [book title]?', 'Tell me about the author [name].', 'What are some similar books to [book title]?', 'What books are trending in [genre]?'";
+chatHistory.push(
+  { role: "SYSTEM", message: SYSTEM_PROMPT },
+  { role: "SYSTEM-TEXT-FORMAT", message: textInstruction }
+);
+});
+
+  app.post("/chat", redirectLogin, async (req, res) => {
+  const query = req.body.query;
+  const genAI = new GoogleGenerativeAI(
+    process.env.GEMINI_API_KEY
+  );
+  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+  chatHistory.push({role:'User', message:query});
+  chatHistory = await JSON.stringify(chatHistory);
+  const result = await model.generateContent(chatHistory);
+  chatHistory = await JSON.parse(chatHistory);
+  chatHistory.push({role:"Bot",message:result.response.text()});
+  res.send(JSON.stringify(result.response.text().slice(7,-4)));
+  console.log(result.response.text().slice(7,-4));
+});
 app.listen(port, () => {
   console.log(`Server active on port : ${port}`);
 });

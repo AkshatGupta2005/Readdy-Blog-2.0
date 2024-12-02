@@ -1,0 +1,51 @@
+<%- include('./partials/header.ejs') %>
+<%- include('./partials/navbar.ejs') %>
+<div class="chatBox">
+    <div class="chatBoxDiv">
+        <div class="chatArea">
+            <div id="reply"></div>
+        </div>
+        <div class="ChatBar">
+            <div class="chatQuery">
+                    <input type="text" class="chatBar" id="query" placeholder="Search Books" autofocus>
+                    <button class="send" onclick=sendQuery()>Send</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    
+    const sendQuery = async () => {
+    const queryBox = document.getElementById("query");
+    const reply = document.getElementById("reply");
+    const query = queryBox.value.trim(); // Trim whitespace
+    const addQuery = (query) => {
+        const queryDiv = document.createElement("div")
+        queryDiv.innerHTML = query;
+        document.getElementsByClassName("chatArea")[0].appendChild(queryDiv);
+    }
+    const addReply = (reply) => {
+        const replyDiv = document.createElement("div");
+        replyDiv.innerHTML = reply;
+        document.getElementsByClassName("chatArea")[0].appendChild(replyDiv);
+    }
+    if (!query) {
+        queryBox.placeholder = 'Please type valid text';
+        return;
+    }else{
+        addQuery(query);
+        queryBox.value = "";
+        const response = await fetch("/chat", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ query })
+        });
+        const data = await response.json();
+        addReply(data);
+    }
+};
+
+</script>
+<%- include('./partials/footer.ejs') %>
