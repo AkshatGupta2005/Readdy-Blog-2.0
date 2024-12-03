@@ -3,12 +3,11 @@
 <div class="chatBox">
     <div class="chatBoxDiv">
         <div class="chatArea">
-            <div id="reply"></div>
         </div>
-        <div class="ChatBar">
+        <div class="chatBar">
             <div class="chatQuery">
-                    <input type="text" class="chatBar" id="query" placeholder="Search Books" autofocus>
-                    <button class="send" onclick=sendQuery()>Send</button>
+                    <input type="text" class="chat" id="query" placeholder="Ask Books/Authors" autofocus>
+                    <button class="send" onclick=sendQuery()></button>
             </div>
         </div>
     </div>
@@ -17,16 +16,23 @@
     
     const sendQuery = async () => {
     const queryBox = document.getElementById("query");
-    const reply = document.getElementById("reply");
     const query = queryBox.value.trim(); // Trim whitespace
     const addQuery = (query) => {
-        const queryDiv = document.createElement("div")
-        queryDiv.innerHTML = query;
+        const queryDiv = document.createElement("div");
+        const queryBox = document.createElement("div");
+        queryDiv.classList.add("query")
+        queryBox.classList.add("queryBox")
+        queryBox.innerHTML = query;
+        queryDiv.appendChild(queryBox);
         document.getElementsByClassName("chatArea")[0].appendChild(queryDiv);
     }
     const addReply = (reply) => {
         const replyDiv = document.createElement("div");
-        replyDiv.innerHTML = reply;
+        replyDiv.classList.add("reply")
+        const queryBox = document.createElement("div");
+        queryBox.classList.add("queryBox");
+        queryBox.innerHTML = reply;
+        replyDiv.appendChild(queryBox);
         document.getElementsByClassName("chatArea")[0].appendChild(replyDiv);
     }
     if (!query) {
@@ -48,4 +54,3 @@
 };
 
 </script>
-<%- include('./partials/footer.ejs') %>

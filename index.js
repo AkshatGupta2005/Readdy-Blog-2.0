@@ -27,13 +27,6 @@ const db = new pg.Client({
 });
 db.connect();
 var chatHistory = [];
-db.query("SELECT * FROM users", (err, res) => {
-  if (err) {
-    console.err("Error : ", err.stack);
-  } else {
-    console.log(res.rows);
-  }
-});
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const client = new Redis(process.env.REDIS_URL);
@@ -108,7 +101,6 @@ const getUserDetails = async (id) => {
 };
 app.get("/", (req, res) => {
   res.render("index.ejs", { userid: req.session.userid });
-  console.log(req.session.userid);
 });
 app.get("/login", redirectHome, (req, res) => {
   res.render("login.ejs");
@@ -174,7 +166,7 @@ app.get("/profile", redirectLogin, async (req, res) => {
 app.get("/chatbot", redirectLogin, (req, res) => {
   res.render("chatbox.ejs", { userid: req.session.userid });
   chatHistory = [];
-  const textInstruction = "Always reply in an HTML-friendly format.";
+  const textInstruction = "Always reply in an Normal text, no bold, no nothing";
 const SYSTEM_PROMPT = 
   "You are a chatbot specializing in book reviews, author insights, and literary recommendations. Only answer questions related to books, authors, or literary topics. If a question is unrelated, politely say: 'Sorry, I can only assist with books, authors, and literary reviews. Please feel free to ask about those!'. If asked who made you, politely reply with: 'I am created with passion and powered by Google.' Do not suggest searching anywhere else for book or author-related reviews. Answer efficiently: 'Can you recommend a book on [genre/topic]?', 'What are some popular books by [author]?', 'What is the summary/review of [book title]?', 'Tell me about the author [name].', 'What are some similar books to [book title]?', 'What books are trending in [genre]?'";
 chatHistory.push(
@@ -184,7 +176,7 @@ chatHistory.push(
 });
 
   app.post("/chat", redirectLogin, async (req, res) => {
-  const query = req.body.query;
+  const query = req.body.query; 
   const genAI = new GoogleGenerativeAI(
     process.env.GEMINI_API_KEY
   );
@@ -194,7 +186,7 @@ chatHistory.push(
   const result = await model.generateContent(chatHistory);
   chatHistory = await JSON.parse(chatHistory);
   chatHistory.push({role:"Bot",message:result.response.text()});
-  res.send(JSON.stringify(result.response.text().slice(7,-4)));
+  res.send(JSON.stringify(result.response.text()));
   console.log(result.response.text().slice(7,-4));
 });
 app.listen(port, () => {

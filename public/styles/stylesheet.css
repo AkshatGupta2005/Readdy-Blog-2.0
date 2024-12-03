@@ -84,6 +84,7 @@ body {
   width: 2.5em;
   background-color: #6d9886;
   border-radius: 0 50% 50% 0;
+  padding-left: 0.5em;
 }
 .loginBtn {
   background-color: #6d9886;
@@ -182,6 +183,9 @@ body {
 }
 footer {
   margin-top: 2em;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
 }
 footer div {
   text-align: center;
@@ -240,21 +244,106 @@ footer div {
 .logoutBtn {
   background-color: #c62e2e;
 }
-hr{
-  border: 1px solid #E4E0E1;
+hr {
+  border: 1px solid #e4e0e1;
   width: 60%;
   text-align: center;
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 1em;
 }
-@media screen and (max-width: 768px){
-  .searchBox{
+.chatBox {
+  display: flex;
+  justify-content: center;
+}
+.chatBoxDiv {
+  display: flex;
+  justify-content: center;
+  width: 85%;
+}
+.chatArea {
+  width: 100%;
+  margin-bottom: 4em;
+}
+.reply {
+  display: block;
+  position: relative;
+  left: 0;
+  text-align: left;
+  font-family: "Dosis", sans-serif;
+}
+.query {
+  display: flex;
+  justify-content: end;
+  text-align: right;
+  font-family: "Dosis", sans-serif;
+  margin: 0.5em 0 0.5em 0;
+}
+.queryBox{
+  width: fit-content;
+  border: 1px solid #4a4947;
+  font-size: 1.6em;
+  border-radius: 15px;
+  padding: 0.3em 1em 0.3em 1em;
+}
+.chat {
+  width: 55%;
+  height: 75%;
+  border-radius: 25px 0 0 25px;
+  padding-left: 1em;
+  font-size: 1em;
+  font-family: "Dosis", sans-serif;
+}
+.chatQuery {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 70%;
+  height: 100%;
+  background-color: #212121;
+  border-radius: 25px 25px 0 0;
+  gap: 5px;
+}
+.chatBar {
+  position: fixed;
+  bottom: 0;
+  height: 3.6em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+.send {
+  background: url(../icons/send_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.svg)
+    no-repeat center;
+  height: 75%;
+  width: 3%;
+  background-color: #6d9886;
+  border-radius: 0 50% 50% 0;
+  padding-left: 2em;
+}
+.chatbotIconDiv{
+  position: absolute;
+  width: fit-content;
+  bottom: 1em;
+  right: 1em;
+}
+.chatbotIcon{
+  width: 3em;
+  height: 3em;
+  border-radius: 50%;
+  background-color: #6d9886;
+  background-image: url(../icons/chat_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+}
+@media screen and (max-width: 768px) {
+  .searchBox {
     order: 1;
     grid-column-start: -3;
     grid-column-end: -1;
   }
-  .navbar{
+  .navbar {
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr;
     height: fit-content;
@@ -281,10 +370,10 @@ hr{
     height: 2.5em;
     font-size: 0.8em;
   }
-  .logoTitle{
+  .logoTitle {
     font-size: 1.9em;
-  } 
-  .optionBtn{
+  }
+  .optionBtn {
     padding: 0.3em 0.5em;
   }
 }
