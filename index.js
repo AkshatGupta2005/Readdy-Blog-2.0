@@ -187,8 +187,32 @@ chatHistory.push(
   chatHistory = await JSON.parse(chatHistory);
   chatHistory.push({role:"Bot",message:result.response.text()});
   res.send(JSON.stringify(result.response.text()));
-  console.log(result.response.text().slice(7,-4));
 });
+
+app.post("/search", redirectLogin, async (req,res) => {
+  const {query} = req.body;
+  const response = await axios.get(`https://www.googleapis.com/books/v1/volumes`, {
+    params: {
+      q: query,
+      key: process.env.BOOK_API_KEY,
+      maxResults: 40
+    }
+  });
+  const data = response.data;
+  res.render("bookView.ejs", {data: data, userid: req.session.userid});
+});
+
+app.post("/view/:id", async (req,res) => {
+  const id = req.params.id;
+  const response = await axios.get(`https://www.googleapis.com/books/v1/volumes/${id}`, {
+    params: {
+      key: process.env.BOOK_API_KEY,
+    }
+  });
+  console.log(response.data);
+  res.render("views.ejs", { userid: req.session.userid, data : response.data });
+})
+
 app.listen(port, () => {
   console.log(`Server active on port : ${port}`);
 });

@@ -1,12 +1,11 @@
 <div class="navbarContainter">
 <div class="navbar">
     <div class="logoBox">
-        <div class="logoImg"></div>
-        <div class="logoTitle">Readdy Blog</div>
+        <a href="/" class="noUnderline"><div class="logoTitle">Readdy Blog</div></a>
     </div>
     <div class="searchBox">
-        <form action="/search" class="searchForm">
-            <input type="text" name="bookName" class="searchBar" placeholder="Search Books/ Authors">
+        <form action="/search" class="searchForm" method="post">
+            <input type="text" name="query" class="searchBar" placeholder="Search Books/ Authors">
             <input type="submit" class="submitBtn" value="">
         </form>
     </div>
