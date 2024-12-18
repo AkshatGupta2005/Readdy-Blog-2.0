@@ -82,6 +82,10 @@ const getUserName = async (id) => {
   const result = await db.query("SELECT name FROM users WHERE id = $1", [id]);
   return result.rows[0].name;
 };
+const removeWishlist = async (uid,id) => {
+  const response = await db.query("DELETE FROM wishlist WHERE uid = $1 AND bookid = $2", [uid, id]);  
+  return;
+}
 const getUserDetails = async (id) => {
   var allBlogs = await db.query("SELECT post FROM blogpost WHERE uid = $1", [
     id,
@@ -209,10 +213,25 @@ app.post("/view/:id", async (req,res) => {
       key: process.env.BOOK_API_KEY,
     }
   });
-  console.log(response.data);
   res.render("views.ejs", { userid: req.session.userid, data : response.data });
 })
 
+app.post("/wishlist",redirectLogin, async (req,res) => {
+  const id = req.body.id;
+  const check = await db.query("SELECT EXISTS (SELECT 1 FROM wishlist WHERE uid = $1 AND bookid = $2)", [req.session.userid, id]);
+  if(check.rows[0].exists){
+    await removeWishlist(req.session.userid, id);
+    res.send(JSON.stringify("removed"));
+  }else{
+    const response = await db.query("INSERT INTO wishlist values($1, $2)", [req.session.userid, id]);
+    res.send(JSON.stringify("inserted"));
+  }
+});
+app.get("/checkWishlist", redirectLogin, async (req,res) => {
+  const response = await db.query("SELECT bookid FROM wishlist WHERE uid = $1", [req.session.userid]);
+  const data = response.rows;
+  res.send(JSON.stringify(data));
+});
 app.listen(port, () => {
   console.log(`Server active on port : ${port}`);
 });

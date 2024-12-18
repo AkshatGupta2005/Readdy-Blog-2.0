@@ -14,7 +14,7 @@
           class="thumbnailImage"
         />
         <% } catch (error) { %>
-          <img src="" alt="Error Loading Image">
+        <img src="" alt="Error Loading Image" />
         <% } %>
       </div>
       <div class="bookInfo">
@@ -30,11 +30,12 @@
           </div>
         </div>
         <div class="options">
-          <div class="wishlistDiv" onclick="addWishlist()">
+          <div class="wishlistDiv" onclick="addWishlist('<%- book.id%>')">
             <img
-              src="/icons/bookmarks_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.svg"
+              src="/images/bookmark.jpg"
               alt="wishlist"
               class="wishlist"
+              id="<%- "wishlist" + book.id %>"
             />
           </div>
           <div class="knowMore">
@@ -48,4 +49,43 @@
     <% }); %>
   </div>
 </div>
+<script>
+  const addWishlist = async (id) => {
+    const response = await fetch("/wishlist", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id }),
+    });
+    const data = await response.json();
+    switch (data) {
+      case "removed":
+        document.getElementById("wishlist" + id).src = "/images/bookmark.jpg";
+        break;
+      case "inserted":
+        document.getElementById("wishlist" + id).src = "/images/bookmark-check.jpg";
+        break;  
+      default:
+        break;
+    }
+  };
+  const checkWishlist = async () => {
+    const response = await fetch("/checkWishlist", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await response.json();
+    data.forEach(book => {
+      const bookid = book.bookid;
+      const wishlist = document.getElementById("wishlist" + bookid);
+      if (wishlist) {
+        wishlist.src = "/images/bookmark-check.jpg";
+      }
+    });
+  }
+  window.addEventListener("load", checkWishlist);
+</script>
 <%- include('./partials/footer.ejs') %>
